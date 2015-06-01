@@ -40,13 +40,13 @@ getRow fc = do
 
 getRows :: Int -> Get [[Double]]
 getRows fc = do
+  row <- getRow fc
   empty <- isEmpty
   if empty
-     then return [[]] -- TODO
-     else do
-       row <- getRow fc
-       rows <- getRows fc
-       return (row:rows)
+    then return [row]
+    else do
+      rows <- getRows fc
+      return (row:rows)
 
 readVersion :: Get Int
 readVersion = readInt
