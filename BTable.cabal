@@ -1,0 +1,21 @@
+name:                BTable
+version:             0.1.0.0
+license:             MIT
+license-file:        LICENSE
+author:              Andrew Berls
+maintainer:          andrew.berls@gmail.com
+category:            Data
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs: src
+  build-depends:
+      base        >= 4.7
+    , bytestring  >= 0.10.6.0
+    , binary      >= 0.7.4.0
+    , hxt-unicode >= 9.0.2.4
+    , containers  >= 0.5.6.3
+  default-language:    Haskell2010
+  ghc-options: -O2 -Wall
