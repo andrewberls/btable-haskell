@@ -11,6 +11,7 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs: src
+  exposed-modules: Data.BTable
   build-depends:
       base                >= 4.7
     , bytestring          >= 0.10.6.0
