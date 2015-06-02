@@ -18,5 +18,6 @@ library
     , hxt-unicode         >= 9.0.2.4
     , containers          >= 0.5.6.3
     , data-binary-ieee754 >= 0.4.4
+    , text                >= 1.2.1.1
   default-language:    Haskell2010
   ghc-options: -O2 -Wall

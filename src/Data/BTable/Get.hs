@@ -1,16 +1,18 @@
+-- TODO: rename to getVersion etc?
+-- TODO: restructure top level in terms of filepaths
 module Data.BTable.Get (
   readVersion,
   readLabels,
   readRows,
   ) where
 
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Char8 as BC
-import           Data.Word
-import qualified Data.Map as Map
 import           Data.Binary.Get
 import           Data.Binary.IEEE754
+import qualified Data.ByteString as B
+import qualified Data.ByteString.Char8 as BC
+import qualified Data.Map as Map
 import           Data.String.Unicode
+import           Data.Word
 
 -- ASCII separator character
 sep :: Word8

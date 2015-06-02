@@ -13,19 +13,10 @@
 --------------------------------------------------------------------
 
 module Data.BTable (
-  readVersion,
-  readLabels,
-  readRows
+  -- * Re-export modules
+  module Data.BTable.Get,
+  module Data.BTable.Put
   ) where
 
-import           Data.Binary.Get
-import qualified Data.BTable.Get as BGet
-
-readVersion :: Get Int
-readVersion = BGet.readVersion
-
-readLabels :: Get [String]
-readLabels = BGet.readLabels
-
-readRows :: Get [[Double]]
-readRows = BGet.readRows
+import Data.BTable.Get
+import Data.BTable.Put
