@@ -3,6 +3,7 @@ module Data.BTable.Put (
   ) where
 
 import           Data.Binary.Put
+import           Data.Binary.IEEE754
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import           Data.Char
@@ -18,13 +19,34 @@ sep = 31
 putVersion :: Put
 putVersion = putWord32be 0
 
+numValues :: [Double] -> Int
+numValues = length . filter (/= 0.0)
+
 putLabels :: [String] -> Put
 putLabels labels = do
   let sepStr = [(chr . fromIntegral) sep]
-      joinedLabels = encodeUtf16BE $ T.pack (intercalate sepStr labels)
-  _ <- putWord32be $ fromIntegral (B.length joinedLabels)
-  _ <- putByteString joinedLabels
+      joinedLabels = (intercalate sepStr labels)
+      labelCount = fromIntegral (length joinedLabels)
+  _ <- putWord32be labelCount
+  _ <- putByteString . encodeUtf16BE . T.pack $ joinedLabels
   return ()
+
+-- putRowValues :: [Double] -> Put
+-- putRowValues row = mapM_ go (zip row [0..])
+--   where go (v,idx)
+--           | v == 0.0 = return
+--           | otherwise = do
+--               _ <- putWord32be idx
+--               _ <- putFloat64be v
+--               return
+--
+-- putRow row = do
+--   _ <- putWord32be . fromIntegral . numValues $ row
+--   _ <- putRowValues row
+--   return
+--
+-- putRows :: [[Double]] -> Put
+-- putRows rows = mapM_ putRow rows
 
 putRows :: [[Double]] -> Put
 putRows rows = undefined
