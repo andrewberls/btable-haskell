@@ -4,7 +4,6 @@ module Data.BTable.Put (
 
 import           Data.Binary.Put
 import           Data.Binary.IEEE754
-import qualified Data.ByteString as B
 import qualified Data.ByteString.Lazy as BL
 import           Data.Char
 import           Data.List
@@ -31,33 +30,24 @@ putLabels labels = do
   _ <- putByteString . encodeUtf16BE . T.pack $ joinedLabels
   return ()
 
--- putRowValues :: [Double] -> Put
--- putRowValues row = mapM_ go (zip row [0..])
---   where go (v,idx)
---           | v == 0.0 = return
---           | otherwise = do
---               _ <- putWord32be idx
---               _ <- putFloat64be v
---               return
---
--- putRow row = do
---   _ <- putWord32be . fromIntegral . numValues $ row
---   _ <- putRowValues row
---   return
---
--- putRows :: [[Double]] -> Put
--- putRows rows = mapM_ putRow rows
+putRow :: [Double] -> Put
+putRow row = do
+  putWord32be $ fromIntegral (numValues row)
+  _ <- traverse putPair $ zip row ([0..] :: [Integer])
+  return ()
+  where putPair (v,idx)
+          | v == 0.0 = return ()
+          | otherwise = do
+              _ <- putWord32be (fromIntegral idx)
+              _ <- putFloat64be v
+              return ()
 
-putRows :: [[Double]] -> Put
-putRows rows = undefined
-
-put' :: [String] -> [[Double]] -> Put
+put' :: [String] -> [[Double]] -> PutM [()]
 put' labels rows = do
   _ <- putVersion
   _ <- putLabels labels
-  _ <- putRows rows
-  return ()
+  mapM putRow rows
 
 put :: FilePath -> [String] -> [[Double]] -> IO ()
 put path labels rows =
-  BL.writeFile path $ runPut (put' labels rows)
+  BL.writeFile path $ snd (runPutM (put' labels rows))
