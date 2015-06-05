@@ -27,8 +27,8 @@ putLabels labels = do
   let sepStr = [(chr . fromIntegral) sep]
       joinedLabels = (intercalate sepStr labels)
       labelCount = fromIntegral (length joinedLabels)
-  _ <- putWord32be labelCount
-  _ <- putByteString . encodeUtf16BE . T.pack $ joinedLabels
+  putWord32be labelCount
+  putByteString . encodeUtf16BE . T.pack $ joinedLabels
   return ()
 
 putRow :: [Double] -> Put
@@ -38,14 +38,14 @@ putRow row = do
   where putPair (v,idx)
           | v == 0.0 = return ()
           | otherwise = do
-              _ <- putWord32be (fromIntegral idx)
-              _ <- putFloat64be v
+              putWord32be (fromIntegral idx)
+              putFloat64be v
               return ()
 
 put' :: [String] -> [[Double]] -> PutM [()]
 put' labels rows = do
-  _ <- putVersion
-  _ <- putLabels labels
+  putVersion
+  putLabels labels
   mapM putRow rows
 
 put :: FilePath -> [String] -> [[Double]] -> IO ()
