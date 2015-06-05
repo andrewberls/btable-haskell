@@ -61,12 +61,12 @@ readLabels' = do
 
 readLabels :: Get [String]
 readLabels = do
-  _ <- readVersion
+  readVersion
   readLabels'
 
 readRows :: Get [[Double]]
 readRows = do
-  _ <- readVersion
+  readVersion
   labels <- readLabels'
   let featureCount = length labels
   getRows featureCount
