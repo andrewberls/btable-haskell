@@ -5,8 +5,9 @@ module Data.BTable.Put (
 import           Data.Binary.Put
 import           Data.Binary.IEEE754
 import qualified Data.ByteString.Lazy as BL
-import           Data.Char
-import           Data.List
+import           Data.Char (chr)
+import           Data.Foldable (traverse_)
+import           Data.List (intercalate)
 import qualified Data.Text as T
 import           Data.Text.Encoding
 import           Data.Word
@@ -33,8 +34,7 @@ putLabels labels = do
 putRow :: [Double] -> Put
 putRow row = do
   putWord32be $ fromIntegral (numValues row)
-  _ <- traverse putPair $ zip row ([0..] :: [Integer])
-  return ()
+  traverse_ putPair $ zip row ([0..] :: [Integer])
   where putPair (v,idx)
           | v == 0.0 = return ()
           | otherwise = do
