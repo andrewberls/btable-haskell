@@ -19,9 +19,6 @@ sep = 31
 putVersion :: Put
 putVersion = putWord32be 0
 
-numValues :: [Double] -> Int
-numValues = length . filter (/= 0.0)
-
 putLabels :: [String] -> Put
 putLabels labels = do
   let sepStr = [(chr . fromIntegral) sep]
@@ -35,7 +32,8 @@ putRow :: [Double] -> Put
 putRow row = do
   putWord32be $ fromIntegral (numValues row)
   traverse_ putPair $ zip row ([0..] :: [Integer])
-  where putPair (v,idx)
+  where numValues = length . filter (/= 0.0)
+        putPair (v,idx)
           | v == 0.0 = return ()
           | otherwise = do
               putWord32be (fromIntegral idx)
